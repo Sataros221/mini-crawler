@@ -45,10 +45,10 @@ def get_internal_links(start_url, output_file="internal_routes.csv"):
     def save_progress():
         df = pd.DataFrame({"URL": sorted(all_links)})
         df.to_csv(output_file, index=False)
-        print(f"\nProgreso guardado en '{output_file}' ({len(all_links)} URLs)")
+        print(f"\Process save in '{output_file}' ({len(all_links)} URLs)")
 
     def signal_handler(sig, frame):
-        print("\nDeteniendo el crawler...")
+        print("\Stoping crawler...")
         save_progress()
         sys.exit(0)
 
@@ -69,7 +69,7 @@ def get_internal_links(start_url, output_file="internal_routes.csv"):
                 if response.status_code != 200:
                     continue
             except Exception as e:
-                print(f"Error al acceder a {current_url}: {str(e)}")
+                print(f"Error when accessing {current_url}: {str(e)}")
                 continue
 
             soup = get_soup(response)
@@ -95,7 +95,7 @@ def get_internal_links(start_url, output_file="internal_routes.csv"):
                 save_progress()
 
     except Exception as e:
-        print(f"Error inesperado: {e}")
+        print(f"Unespected error: {e}")
 
     save_progress()
     return sorted(all_links)
@@ -103,17 +103,17 @@ def get_internal_links(start_url, output_file="internal_routes.csv"):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Uso: python script.py <url> <archivo de salida.csv>")
+        print("Use: python script.py <url> <output file.csv>")
         sys.exit(1)
     start_url = f"{sys.argv[1]}"
     output_file = f"{sys.argv[2]}"
-    print(f"""Iniciando crawler con configuración:
+    print(f"""Starting crawler with:
     - User-Agent: {USER_AGENT}
-    - Delay entre requests: {REQUEST_DELAY}s
-    - Profundidad máxima: {MAX_DEPTH} niveles
-Presiona Ctrl+C para detener y guardar.""")
+    - Delay betwen requests: {REQUEST_DELAY}s
+    - Max depth : {MAX_DEPTH} levels
+Press Ctrl+C to stop and save.""")
 
     internal_links = get_internal_links(start_url, output_file)
     print(
-        f"Proceso completado. {len(internal_links)} URLs guardadas en '{output_file}'"
+        f"Process complete. {len(internal_links)} URLs save's in '{output_file}'"
     )
